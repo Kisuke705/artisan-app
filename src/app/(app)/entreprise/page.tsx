@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { seDeconnecter } from "@/actions/auth";
 import { modifierEntreprise } from "@/actions/entreprise";
 import { FormulaireEntreprise } from "@/components/entreprise/formulaire-entreprise";
-import { Bouton } from "@/components/ui/bouton";
+import { Bouton, LienBouton } from "@/components/ui/bouton";
 import { exigerEntreprise } from "@/lib/auth";
 
 export const metadata: Metadata = { title: "Mon entreprise" };
@@ -20,6 +20,9 @@ export default async function PageEntreprise() {
   return (
     <div className="flex flex-col gap-5">
       <h1 className="text-2xl font-bold">Mon entreprise</h1>
+      <LienBouton href="/catalogue" variante="secondaire" pleineLargeur>
+        📋 Catalogue de prestations
+      </LienBouton>
       <FormulaireEntreprise mode="modification" action={modifierEntreprise} entreprise={entreprise} urlLogo={urlLogo} />
 
       <section className="flex flex-col gap-3 rounded-2xl bg-white p-5 shadow-sm">

@@ -15,6 +15,7 @@ type Props = {
   mode: "creation" | "modification";
   action: (etat: EtatFormulaire, formData: FormData) => Promise<EtatFormulaire>;
   client?: Client;
+  suite?: "intervention"; // créé depuis le parcours « nouvelle intervention »
 };
 
 function Section({ titre, children }: { titre: string; children: React.ReactNode }) {
@@ -26,7 +27,7 @@ function Section({ titre, children }: { titre: string; children: React.ReactNode
   );
 }
 
-export function FormulaireClient({ mode, action, client }: Props) {
+export function FormulaireClient({ mode, action, client, suite }: Props) {
   const [etat, envoyer, enCours] = useActionState(action, {});
   // Le type est suivi par React : le champ TVA n'apparaît que pour une entreprise
   const [type, setType] = useState<TypeClient>(
@@ -44,6 +45,7 @@ export function FormulaireClient({ mode, action, client }: Props) {
 
   return (
     <form action={envoyer} className="flex flex-col gap-4">
+      {suite && <input type="hidden" name="suite" value={suite} />}
       {etat.message && <Alerte type="erreur">{etat.message}</Alerte>}
       {etat.erreurs && <Alerte type="erreur">Certains champs sont à corriger (voir en rouge).</Alerte>}
 
@@ -83,7 +85,7 @@ export function FormulaireClient({ mode, action, client }: Props) {
       </Section>
 
       {mode === "creation" && (
-        <Section titre="Adresse du chantier">
+        <Section titre={suite ? "Adresse du chantier *" : "Adresse du chantier"}>
           <ChampsAdresse prefixe="chantier_" valeurs={etat.valeurs} erreurs={e} />
         </Section>
       )}
@@ -123,7 +125,7 @@ export function FormulaireClient({ mode, action, client }: Props) {
 
       <div className="sticky bottom-24 z-10">
         <Bouton type="submit" pleineLargeur disabled={enCours} className="shadow-lg">
-          {enCours ? "Enregistrement…" : mode === "creation" ? "Créer le client" : "Enregistrer"}
+          {enCours ? "Enregistrement…" : suite ? "Créer et commencer l'intervention" : mode === "creation" ? "Créer le client" : "Enregistrer"}
         </Bouton>
       </div>
     </form>

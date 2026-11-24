@@ -47,21 +47,21 @@ insert into utilisateur (id, entreprise_id, role, nom_complet)
 values ('de300000-0000-4000-8000-000000000001', 'de300000-0000-4000-8000-0000000000e1', 'patron', 'Marc Dupont');
 
 -- ---------- Catalogue de prestations ----------------------------------------
-insert into prestation_catalogue (entreprise_id, description, unite, prix_unitaire_htva, taux_tva, domaine)
-select 'de300000-0000-4000-8000-0000000000e1', description, unite, prix, taux, domaine::domaine_intervention
+insert into prestation_catalogue (entreprise_id, description, unite, prix_unitaire_htva, domaine)
+select 'de300000-0000-4000-8000-0000000000e1', description, unite, prix, domaine::domaine_intervention
 from (values
-  ('Déplacement (zone Namur)',              'forfait', 35.00, 21, null),
-  ('Main d''œuvre',                          'heure',   55.00, 21, null),
-  ('Débouchage canalisation',               'forfait', 95.00, 21, 'plomberie'),
-  ('Remplacement robinet mitigeur',         'pièce',   48.00, 21, 'plomberie'),
-  ('Fourniture mitigeur évier',             'pièce',   69.90, 21, 'plomberie'),
-  ('Remplacement flexible WC',              'pièce',   18.50, 21, 'plomberie'),
-  ('Entretien chaudière gaz + attestation', 'forfait', 120.00, 21, 'chauffage'),
-  ('Purge et équilibrage radiateurs',       'forfait', 65.00, 21, 'chauffage'),
-  ('Remplacement vanne thermostatique',     'pièce',   42.00, 21, 'chauffage'),
-  ('Remplacement prise électrique',         'pièce',   28.00, 21, 'electricite'),
-  ('Recherche de panne électrique',         'heure',   60.00, 21, 'electricite')
-) as catalogue(description, unite, prix, taux, domaine);
+  ('Déplacement (zone Namur)',              'forfait', 35.00, null),
+  ('Main d''œuvre',                          'heure',   55.00, null),
+  ('Débouchage canalisation',               'forfait', 95.00, 'plomberie'),
+  ('Remplacement robinet mitigeur',         'pièce',   48.00, 'plomberie'),
+  ('Fourniture mitigeur évier',             'pièce',   69.90, 'plomberie'),
+  ('Remplacement flexible WC',              'pièce',   18.50, 'plomberie'),
+  ('Entretien chaudière gaz + attestation', 'forfait', 120.00, 'chauffage'),
+  ('Purge et équilibrage radiateurs',       'forfait', 65.00, 'chauffage'),
+  ('Remplacement vanne thermostatique',     'pièce',   42.00, 'chauffage'),
+  ('Remplacement prise électrique',         'pièce',   28.00, 'electricite'),
+  ('Recherche de panne électrique',         'heure',   60.00, 'electricite')
+) as catalogue(description, unite, prix, domaine);
 
 -- ---------- Clients et adresses de chantier (étape 2) ---------------------
 -- Région de Namur. Noms, téléphones et emails fictifs.
@@ -104,3 +104,42 @@ insert into adresse_chantier (id, entreprise_id, client_id, libelle, rue, code_p
    'Atelier', 'Rue de l''Ange 18', '5000', 'Namur', true, null),
   ('de300000-0000-4000-8000-00000000a009', 'de300000-0000-4000-8000-0000000000e1', 'de300000-0000-4000-8000-00000000c007',
    null, 'Route de Gembloux 230', '5080', 'Rhisnes', true, null);
+
+-- ---------- Interventions (étape 3) -------------------------------------------
+-- Dates relatives à aujourd'hui, pour que la démo reste « fraîche ».
+insert into intervention (id, entreprise_id, adresse_chantier_id, technicien_id, date_intervention,
+                          heure_debut, heure_fin, domaine, probleme_constate, travaux_effectues,
+                          probleme_resolu, statut) values
+  ('de300000-0000-4000-8000-0000000001a1', 'de300000-0000-4000-8000-0000000000e1',
+   'de300000-0000-4000-8000-00000000a001', 'de300000-0000-4000-8000-000000000001',
+   current_date - 3, '08:30', '09:45', 'chauffage',
+   'Entretien annuel. Pression du circuit trop basse (0,6 bar).',
+   'Nettoyage brûleur, contrôle combustion, remise en pression à 1,5 bar. Attestation d''entretien remise.',
+   true, 'terminee'),
+  ('de300000-0000-4000-8000-0000000001a2', 'de300000-0000-4000-8000-0000000000e1',
+   'de300000-0000-4000-8000-00000000a004', 'de300000-0000-4000-8000-000000000001',
+   current_date - 10, '14:00', '15:30', 'plomberie',
+   'Évacuation commune bouchée au rez-de-chaussée, refoulement dans l''appartement 0.2.',
+   'Débouchage au furet électrique, rinçage haute pression de la colonne.',
+   true, 'terminee'),
+  ('de300000-0000-4000-8000-0000000001a3', 'de300000-0000-4000-8000-0000000000e1',
+   'de300000-0000-4000-8000-00000000a003', 'de300000-0000-4000-8000-000000000001',
+   current_date - 20, '10:00', '12:00', 'electricite',
+   'Le différentiel saute plusieurs fois par jour.',
+   'Recherche de panne : prise extérieure terrasse humide, remplacée. Défaut d''isolement sur le circuit cuisine à surveiller.',
+   false, 'terminee'),
+  ('de300000-0000-4000-8000-0000000001a4', 'de300000-0000-4000-8000-0000000000e1',
+   'de300000-0000-4000-8000-00000000a002', 'de300000-0000-4000-8000-000000000001',
+   current_date, '16:00', null, 'plomberie',
+   'Fuite sous l''évier de la cuisine, mitigeur qui goutte.',
+   null, null, 'brouillon');
+
+insert into intervention_ligne (entreprise_id, intervention_id, position, description, quantite, unite, prix_unitaire_htva, taux_tva) values
+  ('de300000-0000-4000-8000-0000000000e1', 'de300000-0000-4000-8000-0000000001a1', 1, 'Entretien chaudière gaz + attestation', 1, 'forfait', 120.00, 6),
+  ('de300000-0000-4000-8000-0000000000e1', 'de300000-0000-4000-8000-0000000001a1', 2, 'Déplacement (zone Namur)', 1, 'forfait', 35.00, 6),
+  ('de300000-0000-4000-8000-0000000000e1', 'de300000-0000-4000-8000-0000000001a2', 1, 'Débouchage canalisation', 1, 'forfait', 95.00, 21),
+  ('de300000-0000-4000-8000-0000000000e1', 'de300000-0000-4000-8000-0000000001a2', 2, 'Main d''œuvre', 1.5, 'heure', 55.00, 21),
+  ('de300000-0000-4000-8000-0000000000e1', 'de300000-0000-4000-8000-0000000001a3', 1, 'Recherche de panne électrique', 2, 'heure', 60.00, 21),
+  ('de300000-0000-4000-8000-0000000000e1', 'de300000-0000-4000-8000-0000000001a3', 2, 'Remplacement prise électrique', 1, 'pièce', 28.00, 21),
+  ('de300000-0000-4000-8000-0000000000e1', 'de300000-0000-4000-8000-0000000001a4', 1, 'Remplacement robinet mitigeur', 1, 'pièce', 48.00, 6),
+  ('de300000-0000-4000-8000-0000000000e1', 'de300000-0000-4000-8000-0000000001a4', 2, 'Fourniture mitigeur évier', 1, 'pièce', 69.90, 6);

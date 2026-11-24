@@ -5,7 +5,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { supprimerClient } from "@/actions/clients";
-import { LienBouton } from "@/components/ui/bouton";
+import { creerIntervention } from "@/actions/interventions";
+import { Bouton, LienBouton } from "@/components/ui/bouton";
 import { BoutonSupprimer } from "@/components/ui/bouton-supprimer";
 import { EnTetePage } from "@/components/ui/en-tete-page";
 import { formaterTva } from "@/lib/belgique/identifiants";
@@ -92,6 +93,9 @@ export default async function PageClient({ params }: Props) {
                 Détails
               </LienBouton>
             </div>
+            <form action={creerIntervention.bind(null, adresse.id)}>
+              <Bouton type="submit" pleineLargeur>+ Nouvelle intervention ici</Bouton>
+            </form>
           </article>
         ))}
       </section>

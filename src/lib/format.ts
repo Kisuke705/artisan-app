@@ -40,3 +40,23 @@ export function formaterDateLongue(date: string | Date): string {
 export function aujourdhuiIso(): string {
   return new Intl.DateTimeFormat("en-CA", { timeZone: FUSEAU }).format(new Date());
 }
+
+/** Heure actuelle à Bruxelles : « 14:37 » */
+export function heureActuelle(): string {
+  return new Intl.DateTimeFormat("fr-BE", {
+    timeZone: FUSEAU,
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).format(new Date());
+}
+
+/** « 08:30:00 » (format Postgres) → « 08:30 » ; null → "" */
+export function formaterHeure(heure: string | null): string {
+  return heure ? heure.slice(0, 5) : "";
+}
+
+/** « 1.5 » → « 1,5 » (quantités) */
+export function formaterNombre(n: number): string {
+  return new Intl.NumberFormat("fr-BE", { maximumFractionDigits: 2 }).format(n);
+}

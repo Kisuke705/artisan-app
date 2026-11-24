@@ -69,17 +69,18 @@ export function ZoneTexte({
 
 /** Choix entre quelques options, sous forme de grosses cases à toucher. */
 export function ChoixBoutons({
-  etiquette, nom, erreur, aide, options, valeurParDefaut, enLigne = false, onChange,
+  etiquette, nom, erreur, aide, options, valeurParDefaut, enLigne = false, colonnes, onChange,
 }: Commun & {
   options: { valeur: string; libelle: string; detail?: string }[];
   valeurParDefaut?: string;
   enLigne?: boolean; // options côte à côte (choix courts : Oui / Non)
+  colonnes?: 2; // options en grille de 2 colonnes
   onChange?: (valeur: string) => void;
 }) {
   return (
     <fieldset className="flex flex-col gap-1.5">
       <legend className="mb-1.5 text-sm font-semibold text-encre">{etiquette}</legend>
-      <div className={enLigne ? "grid auto-cols-fr grid-flow-col gap-2" : "grid gap-2"}>
+      <div className={enLigne ? "grid auto-cols-fr grid-flow-col gap-2" : colonnes === 2 ? "grid grid-cols-2 gap-2" : "grid gap-2"}>
         {options.map((o) => (
           <label
             key={o.valeur}

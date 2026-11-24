@@ -9,6 +9,7 @@
  */
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { creerIntervention } from "@/actions/interventions";
 import { exigerEntreprise } from "@/lib/auth";
 import {
   champsAvecPrefixe,
@@ -34,7 +35,9 @@ export async function creerClient(_etat: EtatFormulaire, formData: FormData): Pr
   // 2. Vérifier l'adresse du chantier, seulement si l'artisan a commencé à la remplir
   const champsChantier = champsAvecPrefixe(valeurs, "chantier_");
   const adresseRemplie = Boolean(champsChantier.rue || champsChantier.code_postal || champsChantier.ville);
-  const verifAdresse = adresseRemplie ? schemaAdresse.safeParse(champsChantier) : null;
+  // Client créé depuis « nouvelle intervention » : l'adresse est obligatoire
+  const pourIntervention = valeurs.suite === "intervention";
+  const verifAdresse = adresseRemplie || pourIntervention ? schemaAdresse.safeParse(champsChantier) : null;
 
   // On affiche toutes les erreurs d'un coup (client + adresse)
   if (!verifClient.success || (verifAdresse && !verifAdresse.success)) {
@@ -65,13 +68,20 @@ export async function creerClient(_etat: EtatFormulaire, formData: FormData): Pr
   // 4. Enregistrer l'adresse. Si cela échoue, on supprime le client qu'on
   //    vient de créer pour ne pas laisser une fiche à moitié remplie.
   if (verifAdresse?.success) {
-    const { error: erreurAdresse } = await supabase
+    const { data: adresse, error: erreurAdresse } = await supabase
       .from("adresse_chantier")
-      .insert({ ...verifAdresse.data, client_id: client.id, entreprise_id: entreprise.id });
+      .insert({ ...verifAdresse.data, client_id: client.id, entreprise_id: entreprise.id })
+      .select("id")
+      .single();
     if (erreurAdresse) {
       console.error("Création adresse :", erreurAdresse);
       await supabase.from("client").delete().eq("id", client.id);
       return { message: "Impossible d'enregistrer l'adresse. Réessayez.", valeurs };
+    }
+    // Venu du parcours « intervention » : on enchaîne directement
+    if (pourIntervention) {
+      revalidatePath("/clients");
+      await creerIntervention(adresse.id); // redirige vers l'étape « Travaux »
     }
   }
 

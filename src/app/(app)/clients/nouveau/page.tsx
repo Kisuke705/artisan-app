@@ -5,11 +5,20 @@ import { EnTetePage } from "@/components/ui/en-tete-page";
 
 export const metadata: Metadata = { title: "Nouveau client" };
 
-export default function PageNouveauClient() {
+export default async function PageNouveauClient({
+  searchParams,
+}: {
+  searchParams: Promise<{ suite?: string }>;
+}) {
+  const { suite } = await searchParams;
+  const pourIntervention = suite === "intervention";
   return (
     <>
-      <EnTetePage titre="Nouveau client" retour={{ href: "/clients", libelle: "Clients" }} />
-      <FormulaireClient mode="creation" action={creerClient} />
+      <EnTetePage
+        titre="Nouveau client"
+        retour={pourIntervention ? { href: "/interventions/nouvelle", libelle: "Retour" } : { href: "/clients", libelle: "Clients" }}
+      />
+      <FormulaireClient mode="creation" action={creerClient} suite={pourIntervention ? "intervention" : undefined} />
     </>
   );
 }

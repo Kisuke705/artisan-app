@@ -4,12 +4,15 @@
  */
 import Link from "next/link";
 import { LienBouton } from "@/components/ui/bouton";
+import { CarteIntervention } from "@/components/interventions/carte-intervention";
 import { exigerEntreprise } from "@/lib/auth";
+import { listerInterventions } from "@/lib/donnees/interventions";
 import { formaterDateLongue } from "@/lib/format";
 
 export default async function PageAccueil() {
   const { utilisateur, entreprise } = await exigerEntreprise();
   const prenom = utilisateur.nom_complet?.split(" ")[0];
+  const aTerminer = (await listerInterventions()).filter((i) => i.statut === "brouillon");
 
   // Ce qui manque encore pour des factures complètes
   const aCompleter = [
@@ -32,15 +35,28 @@ export default async function PageAccueil() {
         </Link>
       )}
 
+      <LienBouton href="/interventions/nouvelle" pleineLargeur className="min-h-16 text-lg">
+        + Nouvelle intervention
+      </LienBouton>
+
+      {aTerminer.length > 0 && (
+        <section className="flex flex-col gap-2">
+          <h2 className="font-bold">À terminer ({aTerminer.length})</h2>
+          <ul className="divide-y divide-bord overflow-hidden rounded-2xl border-2 border-amber-300 bg-white shadow-sm">
+            {aTerminer.map((i) => <li key={i.id}><CarteIntervention intervention={i} /></li>)}
+          </ul>
+        </section>
+      )}
+
       <div className="grid grid-cols-2 gap-3">
         <LienBouton href="/clients/nouveau" variante="secondaire">+ Client</LienBouton>
-        <LienBouton href="/clients" variante="secondaire">Mes clients</LienBouton>
+        <LienBouton href="/catalogue" variante="secondaire">Catalogue</LienBouton>
       </div>
 
       <div className="rounded-2xl bg-white p-5 shadow-sm">
         <p className="font-semibold">Bientôt ici</p>
         <p className="mt-1 text-sm text-gris">
-          Vos interventions et votre tableau de bord (chiffre du mois, factures impayées).
+          Votre tableau de bord : chiffre du mois, factures impayées, interventions récentes.
         </p>
       </div>
     </div>

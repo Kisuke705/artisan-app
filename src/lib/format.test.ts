@@ -15,3 +15,18 @@ describe("format belge", () => {
     expect(formaterDate("2026-01-05")).toBe("05/01/2026");
   });
 });
+
+import { formaterHeure, formaterNombre, heureActuelle } from "./format";
+
+describe("heures et nombres", () => {
+  it("donne l'heure au format 24 h « HH:MM »", () => {
+    expect(heureActuelle()).toMatch(/^([01]\d|2[0-3]):[0-5]\d$/);
+    expect(formaterHeure("08:30:00")).toBe("08:30");
+    expect(formaterHeure(null)).toBe("");
+  });
+
+  it("affiche les quantités avec une virgule", () => {
+    expect(formaterNombre(1.5)).toBe("1,5");
+    expect(formaterNombre(2)).toBe("2");
+  });
+});

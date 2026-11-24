@@ -69,3 +69,59 @@ export type AdresseChantier = {
 };
 
 export type ClientAvecAdresses = Client & { adresse_chantier: AdresseChantier[] };
+
+export type Intervention = {
+  id: string;
+  entreprise_id: string;
+  adresse_chantier_id: string;
+  technicien_id: string | null;
+  date_intervention: string; // « 2026-11-25 »
+  heure_debut: string | null; // « 08:30:00 »
+  heure_fin: string | null;
+  domaine: "plomberie" | "electricite" | "chauffage" | "autre";
+  probleme_constate: string | null;
+  travaux_effectues: string | null;
+  probleme_resolu: boolean | null;
+  statut: "brouillon" | "terminee" | "facturee";
+  signature_chemin: string | null;
+  signataire_nom: string | null;
+  signe_le: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type LigneIntervention = {
+  id: string;
+  intervention_id: string;
+  position: number;
+  description: string;
+  quantite: number;
+  unite: string;
+  prix_unitaire_htva: number;
+  taux_tva: 0 | 6 | 21;
+};
+
+export type Photo = {
+  id: string;
+  intervention_id: string;
+  moment: "avant" | "apres";
+  chemin: string;
+  created_at: string;
+};
+
+export type Prestation = {
+  id: string;
+  entreprise_id: string;
+  description: string;
+  unite: string;
+  prix_unitaire_htva: number;
+  domaine: Intervention["domaine"] | null;
+  actif: boolean;
+};
+
+/** Intervention avec tout ce qu'il faut pour l'afficher */
+export type InterventionComplete = Intervention & {
+  adresse_chantier: AdresseChantier & { client: Client };
+  intervention_ligne: LigneIntervention[];
+  photo: Photo[];
+};
