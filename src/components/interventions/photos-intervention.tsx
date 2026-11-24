@@ -11,6 +11,7 @@
  * La règle de stockage (migration 4) vérifie que le dossier est bien
  * celui de l'entreprise de l'utilisateur.
  */
+import { identifiantUnique } from "@/lib/identifiant";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { ajouterPhoto, supprimerPhoto } from "@/actions/interventions";
@@ -61,7 +62,7 @@ export function PhotosIntervention({ interventionId, entrepriseId, photos, lectu
           contenu = fichier; // format que le navigateur ne sait pas réduire : on envoie tel quel
         }
         const extension = contenu.type === "image/jpeg" ? "jpg" : (fichier.name.split(".").pop() ?? "jpg");
-        const chemin = `${entrepriseId}/${interventionId}/${moment}-${crypto.randomUUID()}.${extension}`;
+        const chemin = `${entrepriseId}/${interventionId}/${moment}-${identifiantUnique()}.${extension}`;
 
         const { error } = await supabase.storage
           .from("photos")

@@ -8,6 +8,7 @@
  * - ENREGISTREMENT AUTOMATIQUE : 0,8 s après la dernière modification,
  *   la liste complète est envoyée au serveur (voir changerLignes).
  */
+import { identifiantUnique } from "@/lib/identifiant";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -127,7 +128,7 @@ export function EditeurLignes({
     changerLignes(lignes.map((l) => (l.cle === cle ? { ...l, ...changement } : l)));
 
   const ajouter = (ligne: Omit<LigneSaisie, "cle" | "taux">) =>
-    changerLignes([...lignes, { ...ligne, cle: crypto.randomUUID(), taux: tauxDefaut }]);
+    changerLignes([...lignes, { ...ligne, cle: identifiantUnique(), taux: tauxDefaut }]);
 
   const supprimer = (cle: string) => changerLignes(lignes.filter((l) => l.cle !== cle));
 
