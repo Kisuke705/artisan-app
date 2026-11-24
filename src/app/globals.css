@@ -1,26 +1,26 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Couleurs de l'application (utilisables en classes : bg-marque, text-encre…) */
+@theme {
+  --color-marque: #c2410c;        /* orange brique : boutons principaux */
+  --color-marque-fonce: #9a3412;
+  --color-marque-clair: #fff7ed;
+  --color-encre: #1c1917;         /* texte principal */
+  --color-gris: #57534e;          /* texte secondaire */
+  --color-bord: #d6d3d1;          /* bordures */
+  --color-fond: #f5f5f4;          /* fond de page */
+  --color-succes: #15803d;
+  --color-erreur: #b91c1c;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  /* Évite le zoom automatique d'iOS sur les champs (taille ≥ 16px) */
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-fond);
+  color: var(--color-encre);
+  font-family: var(--font-sans);
 }
