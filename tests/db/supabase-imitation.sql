@@ -43,7 +43,7 @@ create function storage.foldername(name text) returns text[] language sql immuta
 $$;
 
 -- Droits par défaut que Supabase donne sur le schéma public
-grant usage on schema public, auth, storage to anon, authenticated, service_role;
+grant usage on schema public, auth, storage, extensions to anon, authenticated, service_role;
 grant execute on function auth.uid() to anon, authenticated;
 grant all on storage.objects to authenticated;
 alter default privileges in schema public grant all on tables    to anon, authenticated, service_role;

@@ -35,3 +35,37 @@ export type Utilisateur = {
   nom_complet: string | null;
   created_at: string;
 };
+
+export type TypeClient = "particulier" | "entreprise";
+
+export type Client = {
+  id: string;
+  entreprise_id: string;
+  type: TypeClient;
+  nom: string;
+  telephone: string | null;
+  email: string | null;
+  numero_tva: string | null;
+  // adresse de facturation (facultative)
+  rue: string | null;
+  code_postal: string | null;
+  ville: string | null;
+  pays: string;
+  notes: string | null;
+  created_at: string;
+};
+
+export type AdresseChantier = {
+  id: string;
+  entreprise_id: string;
+  client_id: string;
+  libelle: string | null;
+  rue: string;
+  code_postal: string;
+  ville: string;
+  logement_plus_10_ans: boolean | null;
+  notes: string | null;
+  created_at: string;
+};
+
+export type ClientAvecAdresses = Client & { adresse_chantier: AdresseChantier[] };

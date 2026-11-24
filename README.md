@@ -15,7 +15,7 @@ une facture conforme.
 |---|---|---|
 | 0 | Schéma de base de données complet + tests | ✅ |
 | 1 | Inscription, connexion, fiche entreprise au premier lancement | ✅ |
-| 2 | Clients et adresses, recherche rapide | à venir |
+| 2 | Clients et adresses, recherche rapide | ✅ |
 | 3 | Création d'intervention (photos, lignes, catalogue) | à venir |
 | 4 | Récapitulatif client + signature au doigt | à venir |
 | 5 | Devis / facture en un clic, PDF, email | à venir |
@@ -114,6 +114,7 @@ supabase/
     …02_securite_rls.sql           sécurité (chaque entreprise ne voit que ses données)
     …03_documents_numerotation.sql totaux, protection et numérotation des factures
     …04_stockage.sql               photos, signatures, logos
+    …05_recherche_clients.sql      recherche rapide (accents, téléphones, adresses)
   seed.sql           Données de démonstration
 src/
   proxy.ts           Exécuté avant chaque page : session et redirections

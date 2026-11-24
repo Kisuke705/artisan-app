@@ -3,6 +3,7 @@
  * (chiffre du mois, factures impayées, interventions récentes).
  */
 import Link from "next/link";
+import { LienBouton } from "@/components/ui/bouton";
 import { exigerEntreprise } from "@/lib/auth";
 import { formaterDateLongue } from "@/lib/format";
 
@@ -31,10 +32,15 @@ export default async function PageAccueil() {
         </Link>
       )}
 
+      <div className="grid grid-cols-2 gap-3">
+        <LienBouton href="/clients/nouveau" variante="secondaire">+ Client</LienBouton>
+        <LienBouton href="/clients" variante="secondaire">Mes clients</LienBouton>
+      </div>
+
       <div className="rounded-2xl bg-white p-5 shadow-sm">
         <p className="font-semibold">Bientôt ici</p>
         <p className="mt-1 text-sm text-gris">
-          Vos clients, vos interventions, et votre tableau de bord (chiffre du mois, factures impayées).
+          Vos interventions et votre tableau de bord (chiffre du mois, factures impayées).
         </p>
       </div>
     </div>

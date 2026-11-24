@@ -62,3 +62,45 @@ from (values
   ('Remplacement prise électrique',         'pièce',   28.00, 21, 'electricite'),
   ('Recherche de panne électrique',         'heure',   60.00, 21, 'electricite')
 ) as catalogue(description, unite, prix, taux, domaine);
+
+-- ---------- Clients et adresses de chantier (étape 2) ---------------------
+-- Région de Namur. Noms, téléphones et emails fictifs.
+insert into client (id, entreprise_id, type, nom, telephone, email, numero_tva, rue, code_postal, ville, notes) values
+  ('de300000-0000-4000-8000-00000000c001', 'de300000-0000-4000-8000-0000000000e1', 'particulier',
+   'Hélène Lambert', '0470 12 34 56', 'helene.lambert@exemple.be', null, null, null, null,
+   'Préfère être appelée après 17 h.'),
+  ('de300000-0000-4000-8000-00000000c002', 'de300000-0000-4000-8000-0000000000e1', 'particulier',
+   'Jean-Pierre Dubois', '081 22 33 44', null, null, null, null, null,
+   'Chien dans le jardin (gentil). Code portail : demander au client.'),
+  ('de300000-0000-4000-8000-00000000c003', 'de300000-0000-4000-8000-0000000000e1', 'particulier',
+   'Sophie et Karim Benali', '0485 98 76 54', 'benali.famille@exemple.be', null, null, null, null, null),
+  ('de300000-0000-4000-8000-00000000c004', 'de300000-0000-4000-8000-0000000000e1', 'entreprise',
+   'Immo Meuse SRL', '081 40 50 60', 'gestion@immo-meuse.example', 'BE0876543270',
+   'Avenue de la Gare 8', '5000', 'Namur', 'Gestionnaire : M. Lecomte. Envoyer les factures par email.'),
+  ('de300000-0000-4000-8000-00000000c005', 'de300000-0000-4000-8000-0000000000e1', 'particulier',
+   'Marie Verstraeten', '0496 11 22 33', 'marie.v@exemple.be', null, null, null, null, null),
+  ('de300000-0000-4000-8000-00000000c006', 'de300000-0000-4000-8000-0000000000e1', 'entreprise',
+   'Boulangerie Le Bon Pain', '081 30 30 30', 'contact@lebonpain.example', 'BE0765432146',
+   null, null, null, 'Intervention possible uniquement avant 6 h ou après 14 h.'),
+  ('de300000-0000-4000-8000-00000000c007', 'de300000-0000-4000-8000-0000000000e1', 'particulier',
+   'André Lemaire', '+32 475 55 66 77', null, null, null, null, null, null);
+
+insert into adresse_chantier (id, entreprise_id, client_id, libelle, rue, code_postal, ville, logement_plus_10_ans, notes) values
+  ('de300000-0000-4000-8000-00000000a001', 'de300000-0000-4000-8000-0000000000e1', 'de300000-0000-4000-8000-00000000c001',
+   'Maison', 'Rue de Fer 25', '5000', 'Namur', true, 'Chaudière au sous-sol, compteur dans le garage.'),
+  ('de300000-0000-4000-8000-00000000a002', 'de300000-0000-4000-8000-0000000000e1', 'de300000-0000-4000-8000-00000000c002',
+   null, 'Chaussée de Louvain 140', '5020', 'Champion', true, null),
+  ('de300000-0000-4000-8000-00000000a003', 'de300000-0000-4000-8000-0000000000e1', 'de300000-0000-4000-8000-00000000c003',
+   'Maison neuve', 'Rue des Coquelicots 3', '5101', 'Erpent', false, 'Construction 2021 : TVA 21 % obligatoire.'),
+  ('de300000-0000-4000-8000-00000000a004', 'de300000-0000-4000-8000-0000000000e1', 'de300000-0000-4000-8000-00000000c004',
+   'Résidence Les Tilleuls', 'Quai de Meuse 4', '5100', 'Jambes', true, 'Clés chez le concierge (appartement 0.1).'),
+  ('de300000-0000-4000-8000-00000000a005', 'de300000-0000-4000-8000-0000000000e1', 'de300000-0000-4000-8000-00000000c004',
+   'Immeuble Astrid', 'Avenue Reine Astrid 10', '5000', 'Namur', true, null),
+  ('de300000-0000-4000-8000-00000000a006', 'de300000-0000-4000-8000-0000000000e1', 'de300000-0000-4000-8000-00000000c005',
+   'Appartement', 'Rue Saint-Nicolas 52', '5000', 'Namur', null, null),
+  ('de300000-0000-4000-8000-00000000a007', 'de300000-0000-4000-8000-0000000000e1', 'de300000-0000-4000-8000-00000000c005',
+   'Seconde résidence', 'Rue du Lac 7', '5650', 'Walcourt', true, null),
+  ('de300000-0000-4000-8000-00000000a008', 'de300000-0000-4000-8000-0000000000e1', 'de300000-0000-4000-8000-00000000c006',
+   'Atelier', 'Rue de l''Ange 18', '5000', 'Namur', true, null),
+  ('de300000-0000-4000-8000-00000000a009', 'de300000-0000-4000-8000-0000000000e1', 'de300000-0000-4000-8000-00000000c007',
+   null, 'Route de Gembloux 230', '5080', 'Rhisnes', true, null);
